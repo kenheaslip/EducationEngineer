@@ -265,8 +265,8 @@ NOTE: There are other service configurations available for you to use if you nee
 Let's get your service deployed!
 
 1. Load your code editor of choice and create an empty yaml file. Let's name is testAppService.yaml
-3. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
-```
+2. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
+```yml
 apiVersion: v1
 kind: Service
 metadata:
@@ -282,7 +282,13 @@ spec:
     app: web                   # Tells the service which pods are targetted by the service
   type: NodePort               # Tells Kubernetes to configure the nodes running your pods to setup a NodePort mapping so your app can be reached from outside the cluster
 ```
-5. 
+
+3. Let's apply your service config using the command below.
+```shell
+kubectl apply -f testAppService.yaml -n mylab
+```
+
+4. 
 
 
 
