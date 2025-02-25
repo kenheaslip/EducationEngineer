@@ -1,6 +1,48 @@
-# Deploy Applications with Kind
+# Deploying Kubernetes Applications with Kind
 
-Kubernetes is a popular orchestration platform that is used by many organizations to deploy applications. We can use [kind](https://kind.sigs.k8s.io/) to gain practice with kubernetes. Let's deploy an application with kind to see how it works. Start by installing kind from https://kind.sigs.k8s.io/. Be aware that you will need to have Docker installed locally.
+In this execrise, we will practice deploying applications into Kubernetes. Kubernetes is a popular orchestration platform that is used by many organizations to deploy applications. Kubernetes enables developers to worry less about the infrastructure the applciation is running on and focus more on the things that help the application perform. Do you remember the role a hypervisor plays for it's VM'? That is similar to what Kubernetes is to apps it hosts.
+
+# Before You Get Started
+
+To complete this exercise, you will first need to download and install some apps. The table below lists the apps you need and contains links to the installation instructions for each app.
+
+| Section                 | Description                                                                                                     | Download Link                        |
+|-------------------------|-----------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| kind                    | kind is a lightweight software package that sets up a local kubernetes cluster on your workstation.             | [kind](https://kind.sigs.k8s.io/) 
+| Docker                  | Docker leverages Virtual Machines to allow containerized applications to run on your workstation.               | [Docker](https://docs.docker.com/desktop/?_gl=1*corlfd*_gcl_au*NTgyNTA2NjExLjE3NDAzNjMwNzk.*_ga*OTEwMjk5Njc5LjE3NDAzNjMwNzk.*_ga_XJWPQMJYHQ*MTc0MDQ1NDA5NC4yLjEuMTc0MDQ1NDEwNi40OC4wLjA.)
+| kubectl                 | kubectl is the command line utility that you will use to configure and interact with your Kubernetes cluster.   | [kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+## Setup Tips and Common Issues
+
+You may encounter some issues while completing your setup. Don't worry, we have you covered! Use the checklist below to help prevent issues from happening and solve some common issues with these apps.
+
+### Docker Setup Tips
+- Docker requires that you have Hypervisor services enabled in your OS. Be sure you have a supported Hypervisor installed and running on your system before running the Docker install.
+- Docker also requires that your system BIOS has the appropriate virtualization settings enabled. This setting may vary by CPU and Motherboard manufacturer. Please refer to your manufacturer documentation for the values to enable.
+- Bonus hint! For Intel CPU's, the settings is typically "Intel VT-x" and may be located with other advanced CPU settings
+- Bonus hint! For AMD CPU's, the settings is typically "AMD-V" and may be located with other advanced CPU settings
+
+### kubectl Setup Tips
+- Kubectl is really just an executable file. You need to make sure that it is copied to a location in either your systems (or users) path variable or that you add the folder containing kubectl.exe to your path yourself. Follow the installation instructions for your OS with the link in the table above.
+- If kubectl is NOT in your path variable, you will see errors like "not recognized as an internal or external command"
+
+### kind Setup Tips
+- kind has it's own software dependencies. Carefully review the install instructions prior to attempting to install your cluster.
+- kind has multiple options for how to install it. Choose the one that suits you best but be aware that our examples will use the 'go' installation method.
+
+# Creating Your Cluster
+In this section we will be creating the cluster you will use to test your applciation deployments. Kind provides a simple and fully automated process to do this for you. While this is great for our purposes, it is recommended that you take time later to familiarize yourself with how a cluster is manually built. Always take the time to fully understand your environment. It will always pay off when planning upgrades or troubleshooting issues!
+
+## How to Deploy with kind
+
+Follow the steps below to get started!
+
+1. Open up your CLI (Command Prompt for Windows, Terminal for MacOS or Linux)
+2. run the command
+...
+$ go install sigs.k8s.io/kind@v0.27.0 && kind create cluster
+...
+3.  
 
 Start kind with the command `kind create cluster` and wait for the setup to complete.
 
