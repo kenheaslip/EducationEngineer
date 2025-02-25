@@ -38,7 +38,29 @@ In this section we will be creating the cluster you will use to test your applci
 Follow the steps below to get started!
 
 1. Open up your CLI (Command Prompt for Windows, Terminal for MacOS or Linux)
-2. The first thing we need to do is prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
+2. The first thing we need to do is make sure you CLI utilities are installed correctly. To do this execute the commands below and confirm your output is similar and that you are not recieving any error messages.
+
+go command and expected output (it's ok if your version is different)
+```
+go version
+```
+```
+C:\****\****>go version
+go version go1.24.0 windows/amd64
+```
+ubectl command and expected output
+```
+kubectl version
+```
+```
+C:\****\****>kubectl version
+Client Version: v1.31.4
+Kustomize Version: v5.4.2
+Unable to connect to the server: dial tcp [::1]:8080: connectex: No connection could be made because the target machine actively refused it.
+````
+Note: If you have just setup kubectl and have not connected to any clusters, the "unable to connect to the server" error will be displayed. Don't worry, this is ok! We are only validating that kubectl is installed correctly. The kind installation will update our kube config file for us automatically.  
+
+3. Next we need to prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
 ```
 go install sigs.k8s.io/kind@v0.27.0
 ```
@@ -59,18 +81,26 @@ go: downloading sigs.k8s.io/yaml v1.4.0
 go: downloading github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2
 go: downloading github.com/inconshreveable/mousetrap v1.1.0
 ```
-3.  Next up, we will execute the command to have kind create our cluster for us. 
 
-Start kind with the command `kind create cluster` and wait for the setup to complete.
-
+4.  Next up, we will execute the command to have kind create our cluster for us. The command below will kick off the cluster installation process.
 ```
-$ kind create cluster
+kind create cluster
+```
+Expected ouput
+```
+C:\****\****>kind create cluster
 Creating cluster "kind" ...
- ✓ Ensuring node image (kindest/node:v1.25.3) 🖼
+ • Ensuring node image (kindest/node:v1.32.2) 🖼  ...
+ ✓ Ensuring node image (kindest/node:v1.32.2) 🖼
+ • Preparing nodes 📦   ...
  ✓ Preparing nodes 📦
+ • Writing configuration 📜  ...
  ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
  ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
  ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
  ✓ Installing StorageClass 💾
 Set kubectl context to "kind-kind"
 You can now use your cluster with:
@@ -80,11 +110,31 @@ kubectl cluster-info --context kind-kind
 Have a nice day! 👋
 ```
 
+4.  We now have a kubernetes cluster installed but, before we continue, let's make sure everything is working properly. Let's query the cluster nodes and see if our Control Plane has started.
+```
+kubectl get nodes
+```
+If everything completed sucessfully, you should get a response similar to the below output. The key here is ensuring the Control Plane node status is ready. Depending on your systems resources, this may take a few minutes. Periodically execute the command until all is well.
+```
+C:\****\****>kubectl get nodes
+NAME                 STATUS   ROLES           AGE   VERSION
+kind-control-plane   Ready    control-plane   28s   v1.32.2
+```
+To further confirm cluster health, you can execute the command below.
+```
+kubectl cluster-info --context kind-kind
+```
+Your output should look similar to the below.
+```
+C:\Use\****>kubectl cluster-info --context kind-kind
+Kubernetes control plane is running at https://127.0.0.1:51397
+CoreDNS is running at https://127.0.0.1:51397/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
 You should check for connectivity with the Kubernete cluster and the Kubernetes API. A good way to test for connectivity to the cluster and the Kubernetes API is by using the CLI.
 
-```
-$ kubectl cluster-info --context kind-kind
-```
+
 
 You should see output that contains the control plane IP address and more. 
 
