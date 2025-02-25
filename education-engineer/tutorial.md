@@ -131,14 +131,48 @@ Kubernetes control plane is running at https://127.0.0.1:51397
 CoreDNS is running at https://127.0.0.1:51397/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
 
-You should check for connectivity with the Kubernete cluster and the Kubernetes API. A good way to test for connectivity to the cluster and the Kubernetes API is by using the CLI.
+## Deploy Your Application
+In this section we will be deploying an application to your newly created cluster! We will be using a sample application from Google repositories. Be sure to check the comments in the yaml files for a breif description of what the particular configuration does.
+
+### Create a New Namespace
+It's best practice to avoid deploying apps in the default namespace in your cluster. If you use default, you may encounter issues in the future where a cluster version upgrade modifies settings you have applied and creates outages or performance impacts on your apps. 
+
+An example of an issue you could run into is changes to the default namespace limits or quotas:
+- Cluster upgrade removes the limits you set on the default namespace. If you are using a cloud K8s Cluster with node scaling, your app could endlessly scale up and surprise you with a very expensive bill.
+
+1. To create a new namespace named 'mylab', execute the command below.
+```
+kubectl create ns mylab
+```
+Your output should be similar to the below.
+```
+C:\*****\****>kubectl create ns mylab
+namespace/mylab created
+```
+2. Let's check to make sure our namespace is created by executing the command below.
+```
+kubectl get ns
+```
+You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, 'mylab'.
+```
+C:\****\****>kubectl get ns
+NAME                 STATUS   AGE
+default              Active   23m
+kube-node-lease      Active   23m
+kube-public          Active   23m
+kube-system          Active   23m
+local-path-storage   Active   23m
+mylab                Active   3s
+```
 
 
+Follow the steps below to get your application deployed.
+1. Load your code editor of choice and create an empty yaml file. Let's name is testAppDeploy.yaml
+3. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
 
-You should see output that contains the control plane IP address and more. 
-
-## Deploy Application
+4. 
 
 Create a file named **app.yaml** and insert the following configuration. 
 
