@@ -54,7 +54,7 @@ go version
 C:\****\****>go version
 go version go1.24.0 windows/amd64
 ```
-ubectl command and expected output
+kubectl command and expected output
 ```
 kubectl version
 ```
@@ -63,11 +63,10 @@ C:\****\****>kubectl version
 Client Version: v1.31.4
 Kustomize Version: v5.4.2
 Unable to connect to the server: dial tcp [::1]:8080: connectex: No connection could be made because the target machine actively refused it.
-````  
-  
-  
+```
+
 >**Note**: If you have just setup kubectl and have not connected to any clusters, the "unable to connect to the server" error will be displayed. Don't worry, this is ok! We are only validating that kubectl is installed correctly. The kind installation will update our kube config file for us automatically.  
-  
+
   
 3. Next we need to prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
 ```
@@ -119,7 +118,7 @@ kubectl cluster-info --context kind-kind
 Have a nice day! 👋
 ```
 
-4.  We now have a kubernetes cluster installed but, before we continue, let's make sure everything is working properly. Let's query the cluster nodes and see if our Control Plane has started.
+5.  We now have a kubernetes cluster installed but, before we continue, let's make sure everything is working properly. Let's query the cluster nodes and see if our Control Plane has started.
 ```
 kubectl get nodes
 ```
@@ -151,7 +150,7 @@ In this section we will be reviewing the configurations your application needs t
 It's best practice to avoid deploying apps in the default namespace in your cluster. If you use default, you may encounter issues in the future where a cluster version upgrade modifies settings you have applied and creates outages or performance impacts on your apps. 
 
 An example of an issue you could run into is changes to the default namespace limits or quotas:
-- Cluster upgrade removes the limits you set on the default namespace. If you are using a cloud K8s Cluster with node scaling, your app could endlessly scale up and surprise you with a very expensive bill.
+- A cluster upgrade removes or modifies the limits you set on the default namespace. If you are using a cloud K8s Cluster with node scaling, your app could endlessly scale up and surprise you with a very expensive bill.
 
 1. To create a new namespace named 'mylab', execute the command below.
 ```
@@ -167,7 +166,7 @@ namespace/mylab created
 kubectl get ns
 ```
 
-You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, "mylab" and that it's status is "active"
+You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, "mylab", and that it's status is "active"
 ```
 C:\****\****>kubectl get ns
 NAME                 STATUS   AGE
@@ -232,7 +231,8 @@ Context "kind-kind" modified.
 
 4. Deploy your app! Kubernetes views its configurations, including app deployments, as a definition of state. As such, the commands it uses to do the work reflect that. In this case, deploying your application is actually applying a config state for a deployment resource. Make sure your CLI PWD (present working directory) is the folder that contains the testAppDeploy.yaml file. To apply your configuration, run the command below.
 
-Note: if you opted to change your context, you do not need to include the namespace "-n mylab"
+>**Note**: if you opted to change your context, you do not need to include the namespace "-n mylab"
+
 ```
 kubectl apply -f testAppDeploy.yaml -n mylab
 ```
@@ -263,7 +263,7 @@ Ingress access to your application - The service resource can be configured to d
 
 Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
 
-NOTE: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
+>**Note**: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 Let's get your service deployed!
 
@@ -287,7 +287,7 @@ spec:
 ```
 
 3. Let's apply your service config using the command below.
-```shell
+```
 kubectl apply -f testAppService.yaml -n mylab
 ```
 
