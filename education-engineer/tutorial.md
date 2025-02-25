@@ -2,6 +2,12 @@
 
 In this execrise, we will practice deploying applications into Kubernetes. Kubernetes is a popular orchestration platform that is used by many organizations to deploy applications. Kubernetes enables developers to worry less about the infrastructure the applciation is running on and focus more on the things that help the application perform. Do you remember the role a hypervisor plays for it's VM'? That is similar to what Kubernetes is to apps it hosts.
 
+Here is a high level view of what we will be doing in this lab:
+- Installing and configuring pre-requisite software and workstation settings
+- Reviewing some handy setup tips
+- Creating a new local kubernetes cluster using 'kind'
+- Deploying a pre-made sample application
+
 # Before You Get Started
 
 To complete this exercise, you will first need to download and install some apps. The table below lists the apps you need and contains links to the installation instructions for each app.
@@ -133,8 +139,10 @@ CoreDNS is running at https://127.0.0.1:51397/api/v1/namespaces/kube-system/serv
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-## Deploy Your Application
-In this section we will be deploying an application to your newly created cluster! We will be using a sample application from Google repositories. Be sure to check the comments in the yaml files for a breif description of what the particular configuration does.
+## Preparing Your New Cluster
+Congratulations! At this point you have successfully completed installation/configuration of pre-requisite software and built your local kubernetes cluster.
+
+In this section we will be reviewing the configurations your application needs to operate and be reachable on your network. We will be using a sample application from Google repositories to keep things simple.
 
 ### Create a New Namespace
 It's best practice to avoid deploying apps in the default namespace in your cluster. If you use default, you may encounter issues in the future where a cluster version upgrade modifies settings you have applied and creates outages or performance impacts on your apps. 
@@ -155,7 +163,8 @@ namespace/mylab created
 ```
 kubectl get ns
 ```
-You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, 'mylab'.
+
+You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, "mylab" and that it's status is "active"
 ```
 C:\****\****>kubectl get ns
 NAME                 STATUS   AGE
@@ -168,7 +177,58 @@ mylab                Active   3s
 ```
 
 
-Follow the steps below to get your application deployed.
+## At Last, Deploying Your App!
+We are now ready to deploy your application! 
+
+In this section, we will discuss the following:
+- Deploying a Kubernetes Service
+- Deploying a Kubernetes.... Deployment :)
+- Configuring Networking for App Access
+- Other Common Configurations
+
+### Deploying a Kubernetes... Deployment :)
+The kubernetes deployment resource that defines the state of how your application will run in the environment. It is where we define things like how many replicas should be running, what image will be used for the containers, and overall management of the pods running your application. For more information on Kubernetes deployments, visit [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+Let's deploy!
+
+1. Load your code editor of choice and create an empty yaml file. Let's name is testAppDeploy.yaml
+2. Copy and paste the yaml below into your editor. Note the comments in the file. They will provide a brief explanation of what the configs are doing.
+```yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web                                           # Places a label on all pods for easy identification of your app.
+  name: web                                            # defines the name of the deployment. For the sake of sanity, it's best to name it the same things as your app label
+spec:
+  replicas: 1                                          # How many replicas you want to run. Be aware this is just a starting state. Other configs like Horizontal Pod Autoscaling (HPA can be used to scale your pods dynamically)
+  selector:
+    matchLabels:
+      app: web                                         
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:1.0     # the location of the image you want to use for your app. This can be a secure private repo, public, etc. Just make sure your network allows access to the repo.
+        name: hello-app                                # the name of the application being ran.
+```
+
+3. 
+
+
+### Deploying a Kubernetes Service
+The Kubernetes service resource plays a crucial role for applications in your clusters. We will briefly go over the the purpose of the service is and why it's needed for every application you deploy.
+
+Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a defined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service Section".
+
+NOTE: There are other connection methods available. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
+
+Let's get your service deployed!
+
 1. Load your code editor of choice and create an empty yaml file. Let's name is testAppDeploy.yaml
 3. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
 
