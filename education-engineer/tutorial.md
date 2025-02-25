@@ -1,4 +1,4 @@
-# Deploying Kubernetes Applications with Kind
+# Deploying Kubernetes Applications
 
 In this execrise, we will practice deploying applications into Kubernetes. Kubernetes is a popular orchestration platform that is used by many organizations to deploy applications. Kubernetes enables developers to worry less about the infrastructure the applciation is running on and focus more on the things that help the application perform. Do you remember the role a hypervisor plays for it's VM'? That is similar to what Kubernetes is to apps it hosts.
 
@@ -63,9 +63,12 @@ C:\****\****>kubectl version
 Client Version: v1.31.4
 Kustomize Version: v5.4.2
 Unable to connect to the server: dial tcp [::1]:8080: connectex: No connection could be made because the target machine actively refused it.
-````
-Note: If you have just setup kubectl and have not connected to any clusters, the "unable to connect to the server" error will be displayed. Don't worry, this is ok! We are only validating that kubectl is installed correctly. The kind installation will update our kube config file for us automatically.  
-
+````  
+  
+  
+>**Note**: If you have just setup kubectl and have not connected to any clusters, the "unable to connect to the server" error will be displayed. Don't worry, this is ok! We are only validating that kubectl is installed correctly. The kind installation will update our kube config file for us automatically.  
+  
+  
 3. Next we need to prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
 ```
 go install sigs.k8s.io/kind@v0.27.0
