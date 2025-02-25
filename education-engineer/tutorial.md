@@ -215,7 +215,14 @@ spec:
         name: hello-app                                # the name of the application being ran.
 ```
 
-3. 
+3. Lets get your app deployed. Remember when we talked about not deploying apps to the default namepsace? This is where that matters. Any configuration you apply, command you run, etc will target the default namespace unless you either explicitly define the namespace in your command or you set the namespace context in your kube config.
+
+Setting the namespace context will change the default namespace to whatever value you define. This can be handy but make sure you always know If you want to set your namespace context, run the below command
+```
+kubectl config set-context --current --namespace=mylab
+```
+
+4. 
 
 
 ### Deploying a Kubernetes Service
