@@ -258,16 +258,29 @@ The Kubernetes service resource plays a crucial role for applications in your cl
 
 Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a defined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service Section".
 
-NOTE: There are other connection methods available. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
-
 Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
+
+NOTE: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 Let's get your service deployed!
 
 1. Load your code editor of choice and create an empty yaml file. Let's name is testAppService.yaml
 3. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
 ```
-
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web                   # Applies the label to the service resource
+  name: web                    # The name the service will use
+spec:
+  ports:
+  - port: 8080                 # The port number your the service will use to accept inbound connections
+    protocol: TCP              # Specifying the protocol that communications will use. Could be UDP, HTTP, etc
+    targetPort: 8080           # The port number your pods will be listening on
+  selector:
+    app: web                   # Tells the service which pods are targetted by the service
+  type: NodePort               # 
 
 5. 
 
