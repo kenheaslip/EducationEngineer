@@ -19,11 +19,11 @@ Our topics for this exercise will be:
 
 To complete this exercise, you will first need to download and install some pre-requisite apps. The table below lists the apps you need and contains links to the installation instructions for each app.
 
-| Section                 | Description                                                                                                     | Download Link                        |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| kind                    | kind is a lightweight software package that sets up a local kubernetes cluster on your workstation.             | [kind](https://kind.sigs.k8s.io/) 
-| Docker                  | Docker leverages Virtual Machines to allow containerized applications to run on your workstation.               | [Docker](https://docs.docker.com/desktop/?_gl=1*corlfd*_gcl_au*NTgyNTA2NjExLjE3NDAzNjMwNzk.*_ga*OTEwMjk5Njc5LjE3NDAzNjMwNzk.*_ga_XJWPQMJYHQ*MTc0MDQ1NDA5NC4yLjEuMTc0MDQ1NDEwNi40OC4wLjA.)
-| kubectl                 | kubectl is the command line utility that you will use to configure and interact with your Kubernetes cluster.   | [kubectl](https://kubernetes.io/docs/tasks/tools/)
+| Software                | Description                                                                                                                  | Download Link                        |
+|-------------------------|------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| kind                    | kind is software/package of scripts that sets up a kubernetes cluster on your workstation using docker containers as nodes   | [kind](https://kind.sigs.k8s.io/) 
+| Docker                  | Docker leverages Virtual Machines to allow containerized applications to run on your workstation.                            | [Docker](https://docs.docker.com/desktop/?_gl=1*corlfd*_gcl_au*NTgyNTA2NjExLjE3NDAzNjMwNzk.*_ga*OTEwMjk5Njc5LjE3NDAzNjMwNzk.*_ga_XJWPQMJYHQ*MTc0MDQ1NDA5NC4yLjEuMTc0MDQ1NDEwNi40OC4wLjA.)
+| kubectl                 | kubectl is the command line utility that you will use to configure and interact with your Kubernetes cluster.                | [kubectl](https://kubernetes.io/docs/tasks/tools/)
 
 ## Setup Tips and Common Issues
 
@@ -354,9 +354,7 @@ Ingress access to your application - The service resource can be configured to d
 
 Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
 
->**Note**: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
-
-Let's get your service deployed!
+Let's get your service configuration deployed!
 
 1. Load your code editor of choice and create an empty yaml file. Let's name is testAppService.yaml
 2. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
@@ -399,6 +397,7 @@ C:\Users\seph\Documents\Spectro>kubectl get service -n mylab
 NAME   TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 web    NodePort   10.96.95.69   <none>        8080:30278/TCP   19s
 ```
+>**Note**: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
 
 4. Almost done! The last thing we need to do is to expose your container to your local network. To do this we will setup a port forward rule to define the listening port on your workstaion and direct it to the service port in your cluster. there are other targets we can use for port-forwarding liek pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our app, all traffic will route to the intended application regardless of how many pods/replicas we are running.
 
@@ -430,18 +429,24 @@ Wow, we have loaded a lot of stuff onto your workstation. You have the option to
 
 If you want to clean up, here is a list of commands you can run to remove everything we just installed.
 
-|      Command                     |            What it will remove                        | Should I just keep it to play with Kubenetes and kind in the future?             |
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 
-
-
-
-
-
-
+|          Applciation to Remove                         |            How to Remove It                                                  | Should I just keep it to play with Kubenetes and kind in the future?             |
+---------------------------------------------------------|------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| the cluster you just built and all its configs         | execute command "kind delete cluster"                                        | Absolutely!                                                                      |
+| go                                                     | Follow these [steps](https://go.dev/doc/manage-install#uninstalling)         | Absolutely!                                                                      |
+| docker desktop                                         | Follow these [steps](https://docs.docker.com/desktop/uninstall/)             | You guessed it, Aboslutely!                                                      |
 
 # Next Steps
 
-As mentioned before Kubernetes is an orchestration platform used to deploy containerized applications. We hope you now better understand how one can deploy applications to Kubernetes and AWS. 
+Thank you for taking the time to complete this activity! If you want to learn more about what we did, what other configurations options there are, or things that were not covered, check out the links below!
+
+Things we did or discussed:
+- [Official Kubernetes Architecture Page](https://kubernetes.io/docs/concepts/architecture/)
+- [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+Next topics to dive into:
+- [Official Kubernetes Gateway Documentation](https://kubernetes.io/docs/concepts/services-networking/gateway/)
+- [Official Kubernetes Horizontal Pod AutoScaler documentation](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
+
 
 
