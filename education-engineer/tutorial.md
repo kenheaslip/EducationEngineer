@@ -272,6 +272,7 @@ Your result should look similar to the ouput below.
 C:\Users\seph\Documents\Spectro>kubectl apply -f testAppDeploy.yaml -n mylab
 deployment.apps/web created
 ```
+>**Another Note**: If you made mistakes you can simply update your yaml file and re-run the apply command. If you do this, your result will change from "created" to "configured. If you just want to start over, you can re-run the apply command but substitute "apply" with "delete". This will tell Kubernetes to remove applied configurations associated with the yaml file you specify.
 
 5. Let's confirm your pod is deployed. There are two places you can check to make sure your app is running as expected. The first is to check for running pods in the namespace where you deployed your app. To do this, run the command below.
 ```
@@ -423,6 +424,15 @@ Version: 1.0.0
 Hostname: web-6c7ccf7dbb-z4rdn
 ```
 
+## Time to Cleanup
+
+Wow, we have loaded a lot of stuff onto your workstation. You have the option to keep the work you completed if you wish, in which case, skip ahead to the "Next Steps" section.
+
+If you want to clean up, here is a list of commands you can run to remove everything we just installed.
+
+|      Command                     |            What it will remove                        | Should I just keep it to play with Kubenetes and kind in the future?             |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| 
 
 
 
