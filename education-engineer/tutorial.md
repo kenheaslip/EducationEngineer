@@ -31,18 +31,35 @@ You may encounter some issues while completing your setup. Don't worry, we have 
 - kind has multiple options for how to install it. Choose the one that suits you best but be aware that our examples will use the 'go' installation method.
 
 # Creating Your Cluster
-In this section we will be creating the cluster you will use to test your applciation deployments. Kind provides a simple and fully automated process to do this for you. While this is great for our purposes, it is recommended that you take time later to familiarize yourself with how a cluster is manually built. Always take the time to fully understand your environment. It will always pay off when planning upgrades or troubleshooting issues!
+In this section we will be creating the cluster you will use to test your applciation deployments. Kind provides a simple and fully automated process to do this for you. Automations are great for quick excercises like this but it is recommended that you familiarize yourself with how a cluster is manually built. Doing this will help you get the full picture of what it takes to setup a Kubernetes cluster. It will pay off when planning upgrades or troubleshooting issues in the future!
 
-## How to Deploy with kind
+## Creating Your Cluster with Go
 
 Follow the steps below to get started!
 
 1. Open up your CLI (Command Prompt for Windows, Terminal for MacOS or Linux)
-2. run the command
-...
-$ go install sigs.k8s.io/kind@v0.27.0 && kind create cluster
-...
-3.  
+2. The first thing we need to do is prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
+```
+go install sigs.k8s.io/kind@v0.27.0
+```
+Your output should be similar to our output below.
+```
+C:\***\***>go install sigs.k8s.io/kind@v0.27.0
+go: downloading sigs.k8s.io/kind v0.27.0
+go: downloading github.com/spf13/pflag v1.0.5
+go: downloading github.com/spf13/cobra v1.8.0
+go: downloading github.com/pkg/errors v0.9.1
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading al.essio.dev/pkg/shellescape v1.5.1
+go: downloading github.com/BurntSushi/toml v1.4.0
+go: downloading github.com/evanphx/json-patch/v5 v5.6.0
+go: downloading github.com/pelletier/go-toml v1.9.5
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading sigs.k8s.io/yaml v1.4.0
+go: downloading github.com/google/safetext v0.0.0-20220905092116-b49f7bc46da2
+go: downloading github.com/inconshreveable/mousetrap v1.1.0
+```
+3.  Next up, we will execute the command to have kind create our cluster for us. 
 
 Start kind with the command `kind create cluster` and wait for the setup to complete.
 
