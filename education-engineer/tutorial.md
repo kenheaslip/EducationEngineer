@@ -280,71 +280,15 @@ spec:
     targetPort: 8080           # The port number your pods will be listening on
   selector:
     app: web                   # Tells the service which pods are targetted by the service
-  type: NodePort               # 
-
+  type: NodePort               # Tells Kubernetes to configure the nodes running your pods to setup a NodePort mapping so your app can be reached from outside the cluster
+```
 5. 
 
-Create a file named **app.yaml** and insert the following configuration. 
 
-```yml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  creationTimestamp: null
-  labels:
-    app: web
-  name: web
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: web
-  strategy: {}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: web
-    spec:
-      containers:
-      - image: gcr.io/google-samples/hello-app:1.0
-        name: hello-app
-        resources: {}
-status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  labels:
-    app: web
-  name: web
-spec:
-  ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: web
-  type: NodePort
-status:
-  loadBalancer: {}
-```
 
-The configuration file contains a *deployment* configuration and a *service*. We use the deployment to inform Kubernetes the desired state we want for the application. The application, *web*, also has a service definition that exposes the port of the local cluster node to its external Azure network. The exposed *nodePort* is how you will access the application.
-
-Next, deploy the application.
 
 ```shell
-$ kubectl apply -f app.yaml
-```
-
-Now that the application, web, is deployed we can access the application by exposing the nodePort through port forwarding. However, to port forward the container port the container name is required.
-
-To get the container name, issue the following command:
-
-```shell
-$ PODNAME=$(kubectl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=web)
+$ PODNAME=$(kubectl get pods -n mylab --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=web)
 ```
 
 Now that you have the container name, start the port forwarding with the container to expose the port to the local network.
