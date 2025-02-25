@@ -217,13 +217,41 @@ spec:
 
 3. Lets get your app deployed. Remember when we talked about not deploying apps to the default namepsace? This is where that matters. Any configuration you apply, command you run, etc will target the default namespace unless you either explicitly define the namespace in your command or you set the namespace context in your kube config.
 
-Setting the namespace context will change the default namespace to whatever value you define. This can be handy but make sure you always know If you want to set your namespace context, run the below command
+Setting the namespace context will change the default namespace to whatever value you define. This can be handy but make sure you always know what your default is. It may be less risky to get in the habit of explicitly defining your target namespace. If you want to set your namespace context, run the below command.
 ```
 kubectl config set-context --current --namespace=mylab
 ```
+Your result should look similar to the output below.
+```
+C:\****\****>kubectl config set-context --current --namespace=mylab
+Context "kind-kind" modified.
+```
 
-4. 
+4. Deploy your app! Kubernetes views its configurations, including app deployments, as a definition of state. As such, the commands it uses to do the work reflect that. In this case, deploying your application is actually applying a config state for a deployment resource. Make sure your CLI PWD (present working directory) is the folder that contains the testAppDeploy.yaml file. To apply your configuration, run the command below.
 
+Note: if you opted to change your context, you do not need to include the namespace "-n mylab"
+```
+kubectl apply -f testAppDeploy.yaml -n mylab
+```
+
+Your result should look similar to the ouput below.
+```
+C:\Users\seph\Documents\Spectro>kubectl apply -f testAppDeploy.yaml -n mylab
+deployment.apps/web created
+```
+
+5. Let's confirm your pod is deployed. There are two places you can check to make sure your app is running as expected. The first is to check for running pods in the namespace where you deployed your app. To do this, run the command below.
+```
+kubectl get pods -n mylab
+```
+
+Your result should look similar to the output below.
+```
+C:\****\****\>kubectl get pods -n mylab
+NAME                   READY   STATUS    RESTARTS   AGE
+web-75995f7dbf-4ww7k   1/1     Running   0          39s
+```
+Notice the pod has the name you defined in line 6 of your testAppDeploy.yaml file. The rest of the name is randomly assigned to prevent issues with duplicate pods running as your application scales up.
 
 ### Deploying a Kubernetes Service
 The Kubernetes service resource plays a crucial role for applications in your clusters. We will briefly go over the the purpose of the service is and why it's needed for every application you deploy.
@@ -236,10 +264,12 @@ Internal cluster routing to your pods - When you deploy your application into Ku
 
 Let's get your service deployed!
 
-1. Load your code editor of choice and create an empty yaml file. Let's name is testAppDeploy.yaml
+1. Load your code editor of choice and create an empty yaml file. Let's name is testAppService.yaml
 3. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
+```
 
-4. 
+
+5. 
 
 Create a file named **app.yaml** and insert the following configuration. 
 
