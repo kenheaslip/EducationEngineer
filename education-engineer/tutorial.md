@@ -153,9 +153,8 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 Congratulations! You have successfully completed installation/configuration of pre-requisite software and built your local kubernetes cluster.
 
 In this section we will be reviewing:
-- Recommended configurations for your environment
-- How to deploy your application
-- Configurations your application needs to operate and be reachable on your network. We will be using a sample application from Google repositories to keep things simple.
+- The importance of namespaces
+- Create a new namespace for our application
 
 ## Create a New Namespace
 What is a namespace? In Kubernetes, a namespace is a logical construct that is used to isolate your applications from other ones. It serves as a base where security and network policies can be applied to give you control over any applictions that are deployed into it. Since a namespace is a logical construct, let's try and line this up with a real world example.
