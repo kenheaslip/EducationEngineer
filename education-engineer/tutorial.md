@@ -149,7 +149,7 @@ CoreDNS is running at https://127.0.0.1:51397/api/v1/namespaces/kube-system/serv
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-## Preparing Your New Cluster
+# Preparing Your New Cluster
 Congratulations! You have successfully completed installation/configuration of pre-requisite software and built your local kubernetes cluster.
 
 In this section we will be reviewing:
@@ -157,7 +157,7 @@ In this section we will be reviewing:
 - How to deploy your application
 - Configurations your application needs to operate and be reachable on your network. We will be using a sample application from Google repositories to keep things simple.
 
-### Create a New Namespace
+## Create a New Namespace
 What is a namespace? In Kubernetes, a namespace is a logical construct that is used to isolate your applications from other ones. It serves as a base where security and network policies can be applied to give you control over any applictions that are deployed into it. Since a namespace is a logical construct, let's try and line this up with a real world example.
 
 Let's picture a storage unit. Yes, those places where you can rent individual units. Let's picture the whole building as a namespace. We know namespaces are able to exist across multiple nodes (VM's) so let's call each individual storge unit inside the building a worker node, and the items in the units, pods. Now we are looking at one namespace (the building) that is spanning across many nodes (the individual units) and running many pods (the unit contents). This is the basis on which Kubernetes is able to guarnatee high availablity for your application workloads.
@@ -207,7 +207,7 @@ local-path-storage   Active   23m
 mylab                Active   3s
 ```
 
-## At Last, Deploying Your App!
+# At Last, Deploying Your App!
 We are now ready to deploy your application! 
 
 In this section, we will complete the following:
@@ -216,7 +216,7 @@ In this section, we will complete the following:
 - Configuring Networking for App Access
 - Other Common Configurations
 
-### Deploying a Kubernetes... Deployment
+## Deploying a Kubernetes... Deployment
 The Kubernetes deployment resource defines the state of how your application will run in the environment. It is where we define things like how many replicas should be running, what image will be used for the containers, and overall management of the pods running your application. For more information on Kubernetes deployments, visit the [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) web site.
 
 Let's deploy!
@@ -351,7 +351,7 @@ Events:
 ```
 >**Note**: What we configured in our deployment is only a small portion of what we can do. For more information, visit the [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) web site.
 
-### Deploying a Kubernetes Service
+## Deploying a Kubernetes Service
 The Kubernetes service resource plays a crucial role for applications in your cluster. Let's discuss the purpose of the service resource and why it's needed for every application you deploy.
 
 Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a de'fined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service" section.
@@ -406,9 +406,11 @@ web    NodePort   10.96.95.69   <none>        8080:30278/TCP   19s
 ```
 >**Note**: There are other service configurations available for you to use if you need them. For more information visit the [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/) web site.
 
-4. Almost done! The last thing we need to do is expose your container to your local network. To do this we will setup a port forward rule that maps the listening port on your workstaion to port we assigned to your service in your configuration file. There are other targets we can use for port-forwarding like pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our deployment, all traffic will route to the intended pods regardless of how many replicas we are running.
+##Configuring Network Access
 
-Execute the command below to configure your port forward rules. Make sure you don't break out of the results after the command runs.
+Almost done! The last thing we need to do is expose your container to your local network. To do this we will setup a port forward rule that maps the listening port on your workstaion to port we assigned to your service in your configuration file. There are other targets we can use for port-forwarding like pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our deployment, all traffic will route to the intended pods regardless of how many replicas we are running.
+
+1. Execute the command below to configure your port forward rules. Make sure you don't break out of the results after the command runs.
 
 ```
 kubectl port-forward service/web 8080:8080
@@ -422,7 +424,7 @@ Forwarding from 127.0.0.1:8080 -> 8080
 Forwarding from [::1]:8080 -> 8080
 ```
 
-6. We are now ready to test connectivity to your application! Simply open a web browser and navigate to localhost:8080. Alternatively, if you have curl installed in your CLI, you can curl localhost:8080. Whether you use your browser or curl, you should see the following text confirming you have successfuly completed this activity!
+2. We are now ready to test connectivity to your application! Simply open a web browser and navigate to localhost:8080. Alternatively, if you have curl installed in your CLI, you can curl localhost:8080. Whether you use your browser or curl, you should see the following text confirming you have successfuly completed this activity!
 
 ```
 Hello, world!
@@ -430,8 +432,9 @@ Version: 1.0.0
 Hostname: web-6c7ccf7dbb-z4rdn
 ```
 >**Note**: Notice the output is identifying a hostname. This is the name of the pod that has responded to your request. If you were to scale up your deployment and continually refresh your browser, you would notice the hostname changing between the pods your application is runnin.
->
-## Time to Cleanup
+
+
+# Time to Cleanup
 
 Wow, we have loaded a lot of stuff onto your workstation. You have the option to keep the work you completed if you wish, in which case, skip ahead to the "Next Steps" section.
 
