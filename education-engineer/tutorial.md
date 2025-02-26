@@ -7,7 +7,7 @@ Some of the stand out Kubernetes features are:
 - Greater control over the security of your environment
 - Ability to self heal your deployments
 
-In this exercise, we will be walking through the detailed steps to create a small scale kubernetes cluster on your workstation. We will use this environment to deploy a small sample application and of course, we will be sharing some tips, tricks, recommendations, and explanations of what we are setting up and why it matters. 
+In this exercise we will be walking through the detailed steps to create a small scale kubernetes cluster on your workstation. We will use this environment to deploy a small sample application and of course, we will be sharing some tips, tricks, recommendations, and explanations of what we are setting up and why it matters. 
 
 Our topics for this exercise will be:
 - Installing and configuring pre-requisite software and workstation settings
@@ -30,7 +30,7 @@ To complete this exercise, you will first need to download and install some pre-
 You may encounter some issues while completing your setup. Don't worry, we have you covered! Use the checklist below to help prevent issues from happening and solve some common issues with these apps.
 
 ### Docker Setup Tips
-- Docker requires that you have Hypervisor services enabled in your OS. Be sure you have a supported Hypervisor installed and running on your system before running the Docker install.
+- For Windows users only. Docker requires that you have Hypervisor services enabled in your OS. Be sure you have a supported Hypervisor installed and running on your system before running the Docker install.
 - Docker also requires that your system BIOS has the appropriate virtualization settings enabled. This setting may vary by CPU and Motherboard manufacturer. Please refer to your manufacturer documentation for the values to enable.
 - Bonus hint! For Intel CPU's, the settings is typically "Intel VT-x" and may be located with other advanced CPU settings
 - Bonus hint! For AMD CPU's, the settings is typically "AMD-V" and may be located with other advanced CPU settings
@@ -44,14 +44,14 @@ You may encounter some issues while completing your setup. Don't worry, we have 
 - kind has multiple options for how to install it. Choose the one that suits you best but be aware that our examples will use the 'go' installation method.
 
 # Creating Your Cluster
-In this section we will be creating the cluster you will use to test your applciation deployments. Kind provides a simple and fully automated process to do this for you. Automations are great for quick excercises like this but it is recommended that you familiarize yourself with how a cluster is manually built. Doing this will help you get the full picture of what it takes to setup a Kubernetes cluster. It will pay off when planning upgrades or troubleshooting issues in the future!
+In this section we will be creating the cluster you will use to test your applciation deployments. Kind provides a simple and fully automated process to do this for you. Automations are great for quick excercises like this but it is recommended that you familiarize yourself with how a cluster is manually built. Doing this will help you get the full picture of what it takes to setup a Kubernetes cluster. It will pay off when the time comes to plan upgrades or troubleshoot issues in the future!
 
 ## Creating Your Cluster with Go
 
 Follow the steps below to get started!
 
 1. Open up your CLI (Command Prompt for Windows, Terminal for MacOS or Linux)
-2. The first thing we need to do is make sure you CLI utilities are installed correctly. To do this execute the commands below and confirm your output is similar and that you are not recieving any error messages.
+2. The first thing we need to do is make sure your CLI utilities are installed correctly. To do this, execute the commands below and confirm your output is similar and that you are not recieving any error messages.
 
 go command and expected output (it's ok if your version is different)
 ```
@@ -74,9 +74,8 @@ Unable to connect to the server: dial tcp [::1]:8080: connectex: No connection c
 ```
 
 >**Note**: If you have just setup kubectl and have not connected to any clusters, the "unable to connect to the server" error will be displayed. Don't worry, this is ok! We are only validating that kubectl is installed correctly. The kind installation will update our kube config file for us automatically.  
-
   
-3. Next we need to prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below
+3. Next we need to prepare the go environment by downloading the dependencies needed to create your cluster. To do this, run the command below.
 ```
 go install sigs.k8s.io/kind@v0.27.0
 ```
@@ -102,7 +101,7 @@ go: downloading github.com/inconshreveable/mousetrap v1.1.0
 ```
 kind create cluster
 ```
-Expected ouput
+Your results should be similar to the output shown below.
 ```
 C:\****\****>kind create cluster
 Creating cluster "kind" ...
@@ -125,13 +124,13 @@ kubectl cluster-info --context kind-kind
 
 Have a nice day! 👋
 ```
->**Note**: Notice the output from the installation script is only referncing the creation of the control-plane. This is fine for use with small labs (like this one) or any scnenarios where you are testing very basic functionality. In a real environment, Kubernetes would also have "Worker Nodes" built and is where your applications would be ran. Check out this link for more information on kubernetes architecture [Official Kubernetes Architecture Page](https://kubernetes.io/docs/concepts/architecture/).
+>**Note**: Notice the output from the installation script is only referencing the creation of the control-plane. This is fine for use with small labs (like this one) or any scnenarios where you are testing very basic functionality. In a real environment, Kubernetes would also have "worker nodes" built and those nodes are where your applications would be deployed. Check out the [Official Kubernetes Architecture Page](https://kubernetes.io/docs/concepts/architecture/) for more information on Kubernetes architecture .
 
-5.  We now have a kubernetes cluster installed but, before we continue, let's make sure everything is working properly. Use the command below to query the cluster nodes and see if our Control Plane has started.
+5.  We now have a Kubernetes cluster setup but, before we continue, let's make sure everything is working properly. Use the command below to query the cluster nodes and see if our control plane has started.
 ```
 kubectl get nodes
 ```
-If everything completed sucessfully, you should get a response similar to the output below. The key here is ensuring the Control Plane node status is "ready". Depending on your system resources, this may take a few minutes. Periodically execute the command until all is well.
+If everything completed sucessfully, you should get a response similar to the output below. The key here is ensuring the control plane node status is "ready". Depending on your system resources, this may take a few minutes. Periodically execute the command until all is well.
 ```
 C:\****\****>kubectl get nodes
 NAME                 STATUS   ROLES           AGE   VERSION
@@ -159,9 +158,9 @@ In this section we will be reviewing:
 - Configurations your application needs to operate and be reachable on your network. We will be using a sample application from Google repositories to keep things simple.
 
 ### Create a New Namespace
-What is a namespace? In kubernetes, a namespace is a logical construct that is used to isolate your applications from other ones. It serves as a base where security and network policies can be applied to give you control over any applictions that are deployed into it. Since a namepsace is a logical construct, let's try and line this up with a real world example.
+What is a namespace? In Kubernetes, a namespace is a logical construct that is used to isolate your applications from other ones. It serves as a base where security and network policies can be applied to give you control over any applictions that are deployed into it. Since a namespace is a logical construct, let's try and line this up with a real world example.
 
-Let's picture a storage unit. Yes, those places where you can rent individual units. Lets picture the whole building as a namespace. We know namespaces are able to exist across multiple nodes (VM's) so lets call each individual storge unit inside the building a worker node, and the items in the units, pods. Now we are looking at one Namespace (the building) that is spanning across many Nodes (the individual Units) and running many pods (the unit contents). This is the basis on which kubernetes is able to guarnatee high availablity for your application workloads.
+Let's picture a storage unit. Yes, those places where you can rent individual units. Let's picture the whole building as a namespace. We know namespaces are able to exist across multiple nodes (VM's) so let's call each individual storge unit inside the building a worker node, and the items in the units, pods. Now we are looking at one namespace (the building) that is spanning across many nodes (the individual units) and running many pods (the unit contents). This is the basis on which Kubernetes is able to guarnatee high availablity for your application workloads.
 
 How about a picture. Below is a tree diagram of how everything connects. 
 
@@ -170,30 +169,33 @@ How about a picture. Below is a tree diagram of how everything connects.
     - node 1 (storage unit 1)
       - pod 1
       - pod 2
-    - Node 2 (storage unit 2)
+    - node 2 (storage unit 2)
       - pod 1
       - pod 2
 
-Your cluster will come with a few namespace prebuilt. Most of them contain core services your cluster needs to run except for one. The "default" namespace. It's best practice to avoid deploying apps in the default namespace in your cluster. If you use default, you may encounter issues in the future where a cluster version upgrade modifies settings you have applied and creates outages or performance impacts on your apps. TO avoid this we will need to create a new namespace for the applciations we want to deploy.
+Your cluster will come with a few namespace prebuilt. Most of them contain core services your cluster needs to run except for one. The "default" namespace. It's best practice to avoid deploying apps in the default namespace in your cluster. If you use default, you may encounter issues in the future where a cluster version upgrade modifies settings you have applied and creates outages or performance impacts for your apps. To avoid this we will need to create a new namespace for the applciations we want to deploy.
 
-An example of an issue you could run into is changes to the default namespace limits or quotas:
+An example of an issue you could run into is:
+Changes to the default namespace limits or quotas:
 - A cluster upgrade removes or modifies the limits you set on the default namespace. If you are using a cloud K8s Cluster with node scaling, your app could endlessly scale up and surprise you with a very expensive bill.
 
 1. To create a new namespace named 'mylab', execute the command below.
 ```
 kubectl create ns mylab
 ```
+
 Your results should be similar to the output below.
 ```
 C:\*****\****>kubectl create ns mylab
 namespace/mylab created
 ```
+
 2. Let's check to make sure our namespace is created by executing the command below.
 ```
 kubectl get ns
 ```
 
-You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, "mylab", and that it's status is "active"
+You should be able to see all the namespaces that exist on your cluster. Note the age for the namespace we created, "mylab", and that it's status is "active".
 ```
 C:\****\****>kubectl get ns
 NAME                 STATUS   AGE
@@ -205,22 +207,21 @@ local-path-storage   Active   23m
 mylab                Active   3s
 ```
 
-
 ## At Last, Deploying Your App!
 We are now ready to deploy your application! 
 
 In this section, we will complete the following:
-- Deploying a Kubernetes.... Deployment :)
+- Deploying a Kubernetes.... Deployment
 - Deploying a Kubernetes Service
 - Configuring Networking for App Access
 - Other Common Configurations
 
-### Deploying a Kubernetes... Deployment :)
-The kubernetes deployment resource defines the state of how your application will run in the environment. It is where we define things like how many replicas should be running, what image will be used for the containers, and overall management of the pods running your application. For more information on Kubernetes deployments, visit [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+### Deploying a Kubernetes... Deployment
+The Kubernetes deployment resource defines the state of how your application will run in the environment. It is where we define things like how many replicas should be running, what image will be used for the containers, and overall management of the pods running your application. For more information on Kubernetes deployments, visit the [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) web site.
 
 Let's deploy!
 
-1. Load your code editor of choice and create an empty yaml file. Let's name is testAppDeploy.yaml
+1. Load your code editor of choice and create an empty yaml file. Let's name it testAppDeploy.yaml
 2. Copy and paste the yaml below into your editor. Pay attention to the comments in the file. They will provide a brief explanation of what the configs are doing.
 ```yml
 apiVersion: apps/v1
@@ -228,7 +229,7 @@ kind: Deployment
 metadata:
   labels:
     app: web                                           # Places a label on all pods for easy identification of your app.
-  name: web                                            # defines the name of the deployment. For the sake of sanity, it's best to name it the same things as your app label
+  name: web                                            # defines the name of the deployment. For the sake of sanity, it's best to name it the same as your app label
 spec:
   replicas: 1                                          # How many replicas you want to run. Be aware this is just a starting state. Other configs like Horizontal Pod Autoscaling (HPA can be used to scale your pods dynamically)
   selector:
@@ -240,9 +241,9 @@ spec:
         app: web
     spec:
       containers:
-      - image: gcr.io/google-samples/hello-app:1.0     # the location of the image you want to use for your app. This can be a secure private repo, public, etc. Just make sure your network allows access to the repo.
+      - image: gcr.io/google-samples/hello-app:1.0     # the location of the image you want to use for your app. This can be a secure private repo, public, etc. Just make sure your network allows access to the repo. If its a public repo, scrutinize the source to make sure its trusted.
         name: hello-app                                # the name of the application being ran.
-        imagePullPolicy: IfNotPresent                  # tells the deployment to only pull the image if its does not exist. This eliminates unecessary compute, network traffic, and potential delay in starting your pods.
+        imagePullPolicy: IfNotPresent                  # tells the deployment to only pull the image if it does not already exist. This eliminates unecessary compute, network traffic, and potential delay in starting your pods.
         ports:
         - containerPort: 8080                          # tells the deployment what port the container will be listening on
 
@@ -260,12 +261,14 @@ C:\****\****>kubectl config set-context --current --namespace=mylab
 Context "kind-kind" modified.
 ```
 
-4. Kubernetes views its configurations, including app deployments, as a definition of state. As such, the commands it uses to do the work reflect that. In this case, deploying your application is actually applying a configuration state for a deployment resource. Make sure your CLI PWD (present working directory) is set the folder that contains the testAppDeploy.yaml file. To apply your configuration, run the command below.
+4. Kubernetes views its configurations, including app deployments, as a definition of resource state. As such, the commands it uses to do the work reflect that. In this case, deploying your application is actually applying a configuration state for a deployment resource. Make sure your CLI PWD (present working directory) is set to the folder that contains the testAppDeploy.yaml file. 
+
+To apply your configuration, run the command below.
 
 ```
 kubectl apply -f testAppDeploy.yaml -n mylab
 ```
->**Note**: if you opted to change your context, you do not need to include the namespace "-n mylab"
+>**Note**: if you opted to change your context, you do not need to include the namespace identifier "-n mylab".
 
 Your result should look similar to the ouput below.
 ```
@@ -285,7 +288,8 @@ C:\****\****\>kubectl get pods -n mylab
 NAME                   READY   STATUS    RESTARTS   AGE
 web-75995f7dbf-4ww7k   1/1     Running   0          39s
 ```
-Notice the pod has the name you defined in line 6 of your testAppDeploy.yaml file. The rest of the name is randomly assigned to prevent issues with duplicate pods running as your application scales up.
+
+Notice the pod has the name you defined in line 6 of your testAppDeploy.yaml file. The rest of the name is randomly assigned to prevent issues with duplicate pods running as your deployment scales up.
 
 The other place you can check on how your deployment is working is the deployment itself. Execute the command below to query your deployment state. Don't forget to specify your namespace!
 
@@ -299,9 +303,9 @@ C:\****\****>kubectl get deployments -n mylab
 NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 web    1/1     1            1           4h17m
 ```
-This command will show the status of all the deployments currently in the target namespace. This is just a short summary. For more info try adding "-o wide" to the command. Still not enough? For more detailed information on the state of a deployment, we can check logs, events, and most important when starting any troubleshooting, a description of the state of the deployment.
+This command will show the status of all the deployments currently in the targeted namespace. This is just a short summary. For more info try adding "-o wide" to the command. Still not enough? For more detailed information on the state of a deployment, we can check logs, events, and most important when starting any troubleshooting, a description of the state of the deployment.
 
-Query your cluster for your deployment state by executing the command below. Use the name of the deployment from the last command we ran for teh deployment name. If you followed instructions, your deployment name should be "web"
+Query your cluster for your deployment state by executing the command below. Use the name of the deployment from the last command we ran for the deployment name. If you followed instructions, your deployment name should be "web".
 
 ```
 kubectl describe deployment web -n mylab
@@ -345,12 +349,12 @@ Events:
   ----    ------             ----  ----                   -------
   Normal  ScalingReplicaSet  10s   deployment-controller  Scaled up replica set web-6c7ccf7dbb from 0 to 1
 ```
->**Note**: What we configured in our deployment is only a small portion of what we can do. For more information, visit [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+>**Note**: What we configured in our deployment is only a small portion of what we can do. For more information, visit the [Official Kubernetes Deployment Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) web site.
 
 ### Deploying a Kubernetes Service
-The Kubernetes service resource plays a crucial role for applications in your clusters. We will briefly go over the the purpose of the service is and why it's needed for every application you deploy.
+The Kubernetes service resource plays a crucial role for applications in your cluster. Let's discuss the purpose of the service resource and why it's needed for every application you deploy.
 
-Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a defined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service Section".
+Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a de'fined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service" section.
 
 Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
 
