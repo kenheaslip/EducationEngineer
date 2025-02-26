@@ -356,13 +356,14 @@ The Kubernetes service resource plays a crucial role for applications in your cl
 
 Ingress access to your application - The service resource can be configured to define how your application will be accessed. Think of this as connecting a network cable to your application and controlling where the other end of the connection can terminate. In this case, we are stating "nodeport" as the connection method. When the "nodeport" value is set, Kubernetes will direct all traffic into your service by mapping a de'fined port number on the node to the port of your application (port forwarding). There will be examples of this in the "Deploy Your Service" section.
 
-Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run is controlled in your deployment file and can be set to 1 pod 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. View the kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
+Internal cluster routing to your pods - When you deploy your application into Kubernetes, it runs in a resource called a pod. The number of pods that run (replicas) is controlled in your deployment file and can be set to 1 pod, 22 pods, 100 pds, etc. These pods can start and stop many times a day resulting in frequent internal IP changes and pod names for your workloads. The service resource is tied to your deployment and keeps track of how many pods are running and the information it needs to send traffic to them. Try to view the Kubernetes service resource as more of a dynamic load balancer that is always aware of where your application can be reached.
 
 Let's get your service configuration deployed!
 
-1. Load your code editor of choice and create an empty yaml file. Let's name is testAppService.yaml
-2. Copy and paste the yaml below into our testAppService.yaml file and save the changes.
+1. Load your code editor of choice and create an empty yaml file. Let's name it testAppService.yaml
+2. Copy and paste the yaml below into your empty testAppService.yaml file and save the changes.
 ```yml
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -377,13 +378,15 @@ spec:
   selector:
     app: web                   # Tells the service which pods are targetted by the service
   type: NodePort               # Tells Kubernetes to configure the nodes running your pods to setup a NodePort mapping so your app can be reached from outside the cluster
+
 ```
 
-3. Let's apply your service config using the command below.
+3. Let's apply your service config using the command below. Don't forget your namespace identifier!
 
 ```
 kubectl apply -f testAppService.yaml -n mylab
 ```
+
 Your result should look similar to the output below.
 ```
 C:\Users\seph\Documents\Spectro>kubectl apply -f testAppService.yaml
@@ -401,16 +404,16 @@ C:\Users\seph\Documents\Spectro>kubectl get service -n mylab
 NAME   TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 web    NodePort   10.96.95.69   <none>        8080:30278/TCP   19s
 ```
->**Note**: There are other service configurations available for you to use if you need them. For more information visit [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
+>**Note**: There are other service configurations available for you to use if you need them. For more information visit the [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/) web site.
 
-4. Almost done! The last thing we need to do is to expose your container to your local network. To do this we will setup a port forward rule to define the listening port on your workstaion and direct it to the service port in your cluster. there are other targets we can use for port-forwarding liek pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our app, all traffic will route to the intended application regardless of how many pods/replicas we are running.
+4. Almost done! The last thing we need to do is expose your container to your local network. To do this we will setup a port forward rule that maps the listening port on your workstaion to port we assigned to your service in your configuration file. There are other targets we can use for port-forwarding like pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our deployment, all traffic will route to the intended pods regardless of how many replicas we are running.
 
-Execute the command below to configure your port forward rules. Make sure you don't cancel out of the results after the command runs.
+Execute the command below to configure your port forward rules. Make sure you don't break out of the results after the command runs.
 
 ```
 kubectl port-forward service/web 8080:8080
 ```
->**Note: Using this method for port-forwarding is temporary. Once you cancel the command at your command prompt, you will lose connectivity to the application. For more permanent access, you would deploy an ingress gateway, which will be covered in future, more advanced, content.
+>**Note: Using this method for port-forwarding is temporary. Once you break out of the result in your command prompt, you will lose connectivity to the application. For more permanent access, you would deploy an ingress gateway, which will be covered in future, more advanced, content.
 
 Your result should look like the output below.
 ```
@@ -426,12 +429,13 @@ Hello, world!
 Version: 1.0.0
 Hostname: web-6c7ccf7dbb-z4rdn
 ```
-
+>**Note**: Notice the output is identifying a hostname. This is the name of the pod that has responded to your request. If you were to scale up your deployment and continually refresh your browser, you would notice the hostname changing between the pods your application is runnin.
+>
 ## Time to Cleanup
 
 Wow, we have loaded a lot of stuff onto your workstation. You have the option to keep the work you completed if you wish, in which case, skip ahead to the "Next Steps" section.
 
-If you want to clean up, here is a list of commands you can run to remove everything we just installed.
+If you want to clean up, here is a bit of help to remove everything we just installed.
 
 |          Applciation to Remove                         |            How to Remove It                                                  | Should I just keep it to play with Kubenetes and kind in the future?             |
 ---------------------------------------------------------|------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
@@ -451,6 +455,3 @@ Things we did or discussed:
 Next topics to dive into:
 - [Official Kubernetes Gateway Documentation](https://kubernetes.io/docs/concepts/services-networking/gateway/)
 - [Official Kubernetes Horizontal Pod AutoScaler documentation](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
-
-
-
