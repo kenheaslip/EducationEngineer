@@ -405,7 +405,7 @@ web    NodePort   10.96.95.69   <none>        8080:30278/TCP   19s
 ```
 >**Note**: There are other service configurations available for you to use if you need them. For more information visit the [Official Kuberentes Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/) web site.
 
-##Configuring Network Access
+## Configuring Network Access
 
 Almost done! The last thing we need to do is expose your container to your local network. To do this we will setup a port forward rule that maps the listening port on your workstaion to port we assigned to your service in your configuration file. There are other targets we can use for port-forwarding like pods, deployments, etc. We are using service because we have configured a service to handle connectivity to our application. This will ensure that if we scale our deployment, all traffic will route to the intended pods regardless of how many replicas we are running.
 
