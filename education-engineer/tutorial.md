@@ -194,7 +194,7 @@ A namespace is a logical construct that isolates your applications and resources
 
 Think of a storage facility. Imagine the whole building as a single namespace. We know namespaces are able to exist across multiple nodes (VM's) so each individual storge unit will be a worker node, and the items in the units will be pods. Now we are looking at one namespace (the building) that spans across many nodes (the individual units) and operates many pods (the unit contents). This architecture is how Kubernetes can use highly available infrastructure to run your workloads.
 
-Below is a tree diagram of how everything connects.
+Below is a tree diagram representing the relationship of the cluster, namespace, nodes, and pods.
 
 - cluster
   - namespace 1 (the storage building)
